@@ -12,19 +12,39 @@ struct SplashView: View {
     
     var body: some View {
         switch state {
-        case .loading:
+        case .loading: loadingView()
             
-            ZStack {
-                
-            }
-            
-
         case .goToSignInScreen:
             Text("Eu sou a tela de SignIn")
         case .goToHomeScreen:
             Text("Eu sou a Home")
         case .error(let msg):
-            Text("O erro é:\n\(msg)")
+            loadingView(error: msg)
+        }
+    }
+}
+
+extension SplashView {
+    func loadingView (error: String? = nil) -> some View {
+        ZStack {
+            Image("logo")
+                .resizable()
+                .scaledToFit()
+                .background(Color.white)
+                .padding(20)
+                .ignoresSafeArea()
+                .frame(
+                    maxWidth:.infinity,
+                    maxHeight:.infinity
+                    )
+            
+            if let error = error {
+                Text("").alert(isPresented: .constant(true)){
+                    Alert(title: Text("Habit"), message:Text(error), dismissButton: .default(Text("Fechar")){
+                        //Efeito do Botão de Ação aqui se houver
+                    })
+                }
+            }
         }
     }
 }
@@ -33,6 +53,6 @@ struct SplashView: View {
 
 struct SplashView_Previews: PreviewProvider {
     static var previews: some View {
-        SplashView(state: .error("Palmeiras não tem mundial"))
+        SplashView(state: .error("Teste de erro no servidor"))
     }
 }
